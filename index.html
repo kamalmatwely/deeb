@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DEEB - سيرة الديب</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bg"></div>
+<div class="wrap">
+<div class="topbar"><span class="close">✕</span><b>DEEB</b><span>⌄ &nbsp; ⋮</span></div>
+
+<div id="p-mine">
+<div class="user"><h2>🐺 <span id="userFirstName">Kamal</span> 👁️ <span id="userHandle">@Chick...</span></h2><div class="badge"><span id="lvlBadge" class="lvl-pill"><span>Lvl</span><span id="lvlCircle"><span id="lvl">1</span></span><span>👑</span></span><span id="onlineBadge" class="off"><span id="onlineDot" class="dot-off"></span><span id="onlineText">OFFLINE</span></span></div></div>
+<div class="wallet" id="walletPill" onclick="connectWallet()" style="cursor:pointer"><span id="walletShort">Connect Wallet</span> ⌄</div>
+
+<div class="assets" id="topBalanceBox"><div class="label">👑 ASSETS</div><div class="box"><b id="balTop" style="color:#38bdf8">0.0000</b> <span style="color:#7dd3fc">| DEEB</span> <span style="color:#38bdf8;font-size:18px">📈</span></div></div>
+<div class="coin-wrap" id="coinWrap" onclick="tapCoin(event)"><div id="tapLayer" style="position:absolute;inset:0;z-index:30;pointer-events:none"></div>
+<div class="coin-ring"><div class="coin"><div class="crown">👑</div><div class="dnk">DEEB</div><div class="sub">DESERT WOLF • TON</div></div></div>
+<div class="side"><button onclick="shareApp()" title="مشاركة">↗</button></div>
+<div class="side2"><button onclick="showPage('tasks',document.querySelectorAll('.nav button')[1])">🧩</button><button onclick="alert('الدعم قريباً')">?</button></div>
+</div>
+
+<div class="energy"><div class="icon">⚡</div><div class="track"><div class="fill" id="energyFill"></div></div></div>
+
+
+<div class="claim" onclick="doExp()"><b>CLAIM</b></div>
+<button class="btn btn-d" style="margin-top:4px" onclick="useBinocular()">🔭 المنظار - إعلان - +10 ديب</button>
+
+
+<div class="card"><b>آخر نشاط</b><div id="log" style="font-size:12px;margin-top:6px;color:#cbd5e1">لسه مفيش نشاط</div></div>
+<div class="page-bottom-spacer"></div></div>
+
+<div id="p-tasks" style="display:none">
+<div style="text-align:center;padding:14px 6px 2px">
+<div style="font-size:32px;font-weight:900;color:#7dd3fc;letter-spacing:1px;text-shadow:0 4px 16px rgba(56,189,248,.6),0 2px 0 #082f49">Earn Rewards</div>
+<div style="width:72%;height:3px;background:linear-gradient(90deg,transparent,#38bdf8,transparent);margin:8px auto 10px;border-radius:99px;box-shadow:0 0 12px #38bdf8"></div>
+<div style="font-size:13px;color:#e0f2fe;opacity:.92">Rewards go directly to Pool Wallet</div>
+
+</div>
+<div id="tasks">
+  <!-- Static fallback - Tasks are back, always visible even if JS fails -->
+  <div class="atf-task"><div class="watermark">📷</div><div class="ico">📷</div><div class="mid"><b>Instagram Like, Comment &amp; Repost</b><div class="reward">+1 DEEB</div></div><button class="go" onclick="doTask('instagram')">Go</button></div>
+  <div class="atf-task"><div class="watermark">▶</div><div class="ico">💬</div><div class="mid"><b>YouTube Like &amp; Comment (Videos + Shorts)</b><div class="reward">+1 DEEB</div></div><button class="go" onclick="doTask('youtube')">Go</button></div>
+  <div class="atf-task"><div class="watermark">𝕏</div><div class="ico">🔁</div><div class="mid"><b>X (Twitter) Retweet</b><div class="reward">+1 DEEB</div></div><button class="go" onclick="doTask('twitter')">Go</button></div>
+  <div class="atf-task"><div class="watermark">🌐</div><div class="ico">🌐</div><div class="mid"><b>Visit Website (deeb-game)</b><div class="reward">+1 DEEB</div></div><button class="go" onclick="doTask('pool')">Go</button></div>
+  <div class="atf-task"><div class="watermark">🔥</div><div class="ico">🔥</div><div class="mid"><b>React to latest post (English)</b><div class="reward">+1 DEEB</div></div><button class="go" onclick="doTask('react')">Go</button></div>
+  <div class="atf-task"><div class="watermark">🔗</div><div class="ico">🔗</div><div class="mid"><b>Keep DEEB Channel in Bio</b><div class="reward">+1 DEEB</div></div><button class="go" onclick="doTask('bio')">Go</button></div>
+</div>
+
+<div class="page-bottom-spacer"></div></div>
+
+<div id="p-arch" style="display:none">
+<div style="padding:6px 2px 14px">
+  <!-- DEEB PNL 24H - like ATF -->
+  <div class="miner-pnl">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div style="font-size:15px;font-weight:900;letter-spacing:1px;color:#fff">DEEB PNL • 24H</div><div style="font-size:21px;font-weight:900;color:#fff;margin-top:4px">Level <span id="minerLvl">1</span> • Peak <span id="minerPeak">1</span></div></div>
+      <span class="miner-ath">▲ All-time high</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px">
+      <span style="font-size:14px;color:#94a3b8;font-weight:800;border-bottom:1px dashed #94a3b8">24H P&amp;L</span>
+      <b style="font-size:26px;color:#22ff7a">+<span id="minerPnl">0.00</span> DEEB</b>
+    </div>
+    <div style="position:relative;height:110px;margin-top:10px;background:rgba(0,0,0,.35);border-radius:14px;overflow:hidden">
+      <svg viewBox="0 0 320 110" style="width:100%;height:100%">
+        <line x1="0" y1="28" x2="320" y2="28" stroke="#38bdf8" stroke-dasharray="6 6" stroke-opacity=".4"/>
+        <line x1="0" y1="55" x2="320" y2="55" stroke="#1e293b" stroke-width="1"/>
+        <line x1="0" y1="82" x2="320" y2="82" stroke="#1e293b" stroke-width="1"/>
+        <path d="M0,95 C40,88 70,70 110,62 C150,54 190,38 230,28 C260,20 290,12 320,8" fill="none" stroke="#22ff7a" stroke-width="3" stroke-linecap="round"/>
+        <circle cx="320" cy="8" r="6" fill="#22ff7a"/>
+      </svg>
+      <span style="position:absolute;right:8px;top:6px;background:#22ff7a;color:#000;font-weight:900;font-size:13px;padding:4px 10px;border-radius:99px" id="minerChartVal">0.00</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:#64748b;margin-top:4px"><span>1:29 AM</span><span>01:29 PM</span><span>01:29 AM</span></div>
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;cursor:pointer" onclick="toggleMinerChart()">
+      <span style="width:38px;height:38px;border-radius:50%;border:2px solid #facc15;display:flex;align-items:center;justify-content:center;font-size:16px">📊</span>
+      <b style="font-size:16px;color:#fff">Tap to view full 24H Chart</b><span style="margin-left:auto;color:#facc15;font-size:20px">›</span>
+    </div>
+    <div id="minerChartFull" style="display:none;margin-top:10px;background:rgba(0,0,0,.5);border-radius:14px;padding:10px;font-size:12px;color:#94a3b8">DEEB is rising! Your mining speed grows with every Level. Keep mining, invite friends, and level up your Desert Wolf.</div>
+  </div>
+  <!-- Miners Grid - DEEB Levels up to 20,000 DEEB (Lvl 1 to Lvl 21) -->
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px"><b style="color:#fff;font-size:16px">DEEB Wolves</b><span style="font-size:12px;color:#94a3b8">Lvl 1 - Lvl 21 • Up to 20,000 DEEB</span></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px" id="minerGrid">
+    <!-- Static fallback: first 4 + last one, JS will render all 21 -->
+    <div class="miner-card active"><span class="miner-lvl">Lvl 1</span><div style="font-size:52px;text-align:center;margin:6px 0">🐺</div><div class="miner-price" style="color:#22ff7a">0.002$</div><div style="display:flex;justify-content:space-between;font-size:12px;color:#94a3b8;margin-top:8px"><span>Speed</span><b style="color:#facc15">1.06 TH/s</b></div><button class="miner-active">ACTIVE</button></div>
+    <div class="miner-card"><span class="miner-lvl">Lvl 2</span><div style="font-size:52px;text-align:center;margin:6px 0;opacity:.9">🐺</div><div class="miner-price" style="color:#facc15">0.004$</div><div style="display:flex;justify-content:space-between;font-size:12px;color:#94a3b8;margin-top:8px"><span>Speed</span><b style="color:#facc15">1.08 TH/s</b></div><button class="miner-need">🔒 NEED 1,000 DEEB</button><div style="text-align:center;font-size:11px;color:#e2e8f0;margin-top:6px">Just <b style="color:#22c55e">$0.002</b> to Level Up</div></div>
+    <div class="miner-card"><span class="miner-lvl">Lvl 21</span><div style="font-size:52px;text-align:center;margin:6px 0;opacity:.5">🐺</div><div class="miner-price" style="color:#facc15">0.042$</div><div style="display:flex;justify-content:space-between;font-size:12px;color:#94a3b8;margin-top:8px"><span>Speed</span><b style="color:#facc15">1.46 TH/s</b></div><button class="miner-need">🔒 NEED 20,000 DEEB</button></div>
+  </div>
+  <div style="text-align:center;font-size:12px;color:#94a3b8;margin-top:10px">Scroll to see all wolves up to <b style="color:#facc15">20,000 DEEB</b> • Every 1,000 DEEB = 1 Level</div>
+  <!-- Preserve / Oasis removed from UI - hidden placeholders so JS doesn't break -->
+  <div style="display:none"><div id="tonWrap"></div><span id="bal2">0</span><span id="pres">0</span><span id="oasis">0.000</span><span id="adV">0</span></div>
+</div>
+<div class="page-bottom-spacer"></div></div>
+
+<div id="p-friends" style="display:none">
+<div style="padding:6px 2px 14px">
+  <div style="text-align:center;margin:6px 0 14px">
+    <div style="font-size:34px;font-weight:900;color:#38bdf8;letter-spacing:.5px">Friends</div>
+    <div style="font-size:15px;color:#e2e8f0;margin-top:4px">Invite friends to boost mining speed!</div>
+    <div style="width:60%;height:2px;background:linear-gradient(90deg,transparent,#38bdf8,transparent);margin:10px auto 0"></div>
+  </div>
+  <!-- Share Certificate Card -->
+  <div class="atf-card">
+    <div class="atf-ico">🏆</div>
+    <div class="atf-mid"><b>Share Certificate Card</b><div class="atf-sub">Create your official DEEB Family member card</div></div>
+    <button class="atf-btn" onclick="createCert()">Create</button>
+  </div>
+  <!-- Your Invite Link -->
+  <div class="atf-card">
+    <div class="atf-ico">🔗</div>
+    <div class="atf-mid"><b>Your Invite Link</b><div class="atf-sub" id="inviteLinkText" style="word-break:break-all">https://t.me/DEEB_Desert_Bot?start=ref_</div></div>
+    <button class="atf-btn" onclick="copyInvite()">Copy</button>
+  </div>
+  <!-- Your Referrals -->
+  <div class="atf-card">
+    <div class="atf-ico">👥</div>
+    <div class="atf-mid"><b>Your Referrals</b><div class="atf-sub"><span id="refCompleted">0</span> completed · <span id="refTotal">0</span> total</div></div>
+    <button class="atf-btn" onclick="showReferrals()">Open</button>
+  </div>
+  <!-- Referral Reward -->
+  <div class="atf-card">
+    <div class="atf-ico">🎁</div>
+    <div class="atf-mid"><b>Referral Reward</b><div class="atf-sub"><span id="refReady">0</span> ready · +5 DEEB per friend</div></div>
+    <button class="atf-btn" id="refClaimBtn" onclick="claimReferral()" style="background:#475569;color:#fff;box-shadow:none;opacity:.6">Claim</button>
+  </div>
+  <!-- Team Wallet -->
+  <div class="atf-card">
+    <div class="atf-ico">⏳</div>
+    <div class="atf-mid"><b>Team Wallet</b><div class="atf-sub"><span id="teamWallet">0</span> DEEB · Earnings from your network</div></div>
+    <button class="atf-btn" id="teamClaimBtn" onclick="claimTeam()" style="background:#475569;color:#fff;box-shadow:none;opacity:.6">Claim</button>
+  </div>
+  <div id="refList" style="display:none;margin-top:10px"></div>
+  <div id="certCard" style="display:none;margin-top:10px"></div>
+</div>
+<div class="page-bottom-spacer"></div></div>
+
+<div id="p-profile" style="display:none">
+<div style="padding:6px 2px 14px">
+  <div style="text-align:center;margin:6px 0 14px">
+    <div style="font-size:34px;font-weight:900;color:#38bdf8;letter-spacing:.5px">Profile</div>
+    <div style="width:60%;height:2px;background:linear-gradient(90deg,transparent,#38bdf8,transparent);margin:10px auto 0"></div>
+  </div>
+  <!-- User ID -->
+  <div class="atf-card">
+    <div class="atf-ico">👤</div>
+    <div class="atf-mid"><b>User ID</b><div class="atf-sub" id="profUserId">Loading...</div></div>
+  </div>
+  <!-- Account Verification - Real Verification -->
+  <div class="atf-card" style="flex-direction:column;align-items:stretch">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="atf-ico">✅</div>
+      <div class="atf-mid"><b>Account<br>Verification</b><div class="atf-sub" id="profVerifyStatus">Unverified</div></div>
+      <button class="atf-btn" id="verifyBtn" onclick="verifyAccount()">Verify</button>
+    </div>
+    <div id="verifySteps" style="margin-top:12px;display:grid;gap:6px;font-size:13px">
+      <div style="display:flex;justify-content:space-between"><span>1. Telegram Account</span><span id="vStep1">⏳ Checking...</span></div>
+      <div style="display:flex;justify-content:space-between"><span>2. User ID</span><span id="vStep2">⏳ Checking...</span></div>
+      <div style="display:flex;justify-content:space-between"><span>3. TON Wallet</span><span id="vStep3">⏳ Checking...</span></div>
+    </div>
+  </div>
+  <!-- Sound effects -->
+  <div class="atf-card" onclick="toggleSound()" style="cursor:pointer">
+    <div class="atf-ico">🔊</div>
+    <div class="atf-mid"><b>Sound effects</b><div class="atf-sub" id="soundStatus">On — tap to mute</div></div>
+  </div>
+  <!-- VIP - like ATF -->
+  <div class="atf-card">
+    <div class="atf-ico">💎</div>
+    <div class="atf-mid"><b>VIP</b><div class="atf-sub">DEEB Vault Lock · Assets Bonus</div></div>
+    <button class="atf-btn" onclick="alert('DEEB Vault Lock coming soon')">Open</button>
+  </div>
+  <!-- Assets - Collected only, NOT auto-mining, in cents -->
+  <div class="atf-card">
+    <div class="atf-ico">💰</div>
+    <div class="atf-mid"><b>Assets</b><div class="atf-sub"><span id="profAssets">0.0000</span> DEEB</div><div style="font-size:11px;color:#94a3b8">Collected only - not counting</div></div>
+    <span class="atf-pill">≈ <span id="profUsd">0.00</span>¢</span>
+  </div>
+  <!-- Holding Wallet -->
+  <div class="atf-card">
+    <div class="atf-ico">💳</div>
+    <div class="atf-mid"><b>Holding Wallet</b><div class="atf-sub"><span id="profHolding">0</span> DEEB</div></div>
+  </div>
+  <!-- Pool Wallet -->
+  <div class="atf-card">
+    <div class="atf-ico">🏛️</div>
+    <div class="atf-mid"><b>Pool Wallet</b><div class="atf-sub">Withdrawable balance</div></div>
+    <b class="atf-green"><span id="profPool">0.0000</span> DEEB</b>
+  </div>
+  <div style="text-align:center;font-size:22px;font-weight:900;color:#38bdf8;margin:18px 0 10px;letter-spacing:.5px">Controls</div>
+  <!-- Withdraw -->
+  <div class="atf-card">
+    <div class="atf-ico">↗️</div>
+    <div class="atf-mid"><b>Withdraw</b><div class="atf-sub">Transfer Pool to Wallet</div></div>
+    <button class="atf-btn" onclick="openWithdraw()">Withdraw</button>
+  </div>
+  <!-- History -->
+  <div class="atf-card">
+    <div class="atf-ico">🧾</div>
+    <div class="atf-mid"><b>History</b><div class="atf-sub">Your withdrawals</div></div>
+    <button class="atf-btn" onclick="showProfileHistory()">Open</button>
+  </div>
+  <div id="profHistory" style="display:none;margin-top:10px"></div>
+  <div style="text-align:center;font-size:11px;color:#64748b;margin-top:14px"><span id="profUser">🐺 Kamal</span> • <span id="profWalletShort">Connect Wallet</span></div>
+</div>
+</div>
+<div class="page-bottom-spacer"></div></div>
+
+
+<!-- Withdraw DEEB Modal - like ATF, min 1000 -->
+<div id="withdrawModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:100;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#0f172a;border:1.5px solid #38bdf8;border-radius:28px;padding:28px 20px;width:100%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6)">
+    <div style="font-size:26px;font-weight:900;color:#fff">Withdraw DEEB</div>
+    <div style="font-size:14px;color:#94a3b8;margin-top:14px">Available Pool: <span id="wdPool">0.0000</span> DEEB</div>
+    <div style="font-size:14px;color:#94a3b8;margin-top:6px">Minimum withdrawal: 1000 DEEB · Fee: 7 DEEB</div>
+    <div style="display:flex;align-items:center;background:#000;border:1.5px solid #1e293b;border-radius:16px;padding:14px;margin-top:18px;gap:8px">
+      <input id="wdAmount" type="number" placeholder="0.00" style="flex:1;background:transparent;border:none;outline:none;color:#fff;font-size:22px;font-weight:800;width:100%" />
+      <button onclick="setWdMax()" style="background:#475569;color:#facc15;border:none;padding:10px 18px;border-radius:12px;font-weight:900;font-size:16px">MAX</button>
+    </div>
+    <div id="wdFeeNote" style="font-size:12px;color:#94a3b8;margin-top:8px">You will receive: <b style="color:#22c55e" id="wdReceive">0</b> DEEB after fee</div>
+    <div id="wdError" style="display:none;font-size:14px;font-weight:800;color:#ff4444;background:rgba(255,68,68,.12);border:1px solid #ff4444;border-radius:12px;padding:10px;margin-top:10px"></div>
+    <div style="display:flex;gap:12px;margin-top:18px">
+      <button onclick="closeWithdraw()" style="flex:1;background:#475569;color:#fff;border:none;padding:14px;border-radius:16px;font-weight:900;font-size:16px">Cancel</button>
+      <button onclick="confirmWithdraw()" style="flex:1;background:linear-gradient(180deg,#fde047,#facc15);color:#000;border:none;padding:14px;border-radius:16px;font-weight:900;font-size:16px">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+<button onclick="showPage('mine',this)" class="on"><span>⛏️</span>Mine</button>
+<button onclick="showPage('tasks',this)"><span>🧳</span>Tasks</button>
+<button onclick="showPage('arch',this)"><span>⚡</span>Miners</button>
+<button onclick="showPage('friends',this)"><span>👥</span>Friends</button>
+<button onclick="showPage('profile',this)"><span>👤</span>Profile</button>
+</div>
+
+<div id="adM" class="modal"><div><div style="color:#38bdf8;font-weight:800">المنظار - إعلان</div><div style="font-size:12px;margin-top:8px">مشاهدة إعلان... +10 ديب بعد 3 ثواني</div></div></div>
+<div id="interM" class="modal"><div><div style="font-size:26px">🌬️</div><div>Desert wind passing... Interstitial Ad</div></div></div>
+
+<script src="js/app.js"></script>
+<div style="display:none"><span id="expCount">0</span><span id="bal3">0</span><span id="remain">0</span><span id="gain">0</span><div id="remainBar"></div><span id="leftUp">0</span></div>
+</body>
+</html>
