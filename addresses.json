@@ -1,0 +1,25 @@
+{
+  "token": {
+    "name": "DEEB",
+    "symbol": "DEEB",
+    "network": "TON",
+    "contract_address": "EQCk7OdnTdNQR1v5gn2yulD6ieTBte00SyJ9hqilOiRKDwXE",
+    "decimals": 9,
+    "total_supply": 40000000,
+    "price_usd": 7.5e-06
+  },
+  "wallets": {
+    "pool_wallet": "EQCSxMGBDrK7pprTSu4_vHFGmv9RWxZmFRH0D6JBeci9T6aK",
+    "owner_wallet": "UQBfJAOxieOPI1tlo784ywL9jlo1Ez2enZtfP5MuJ7RW-r4D",
+    "treasury_wallet": "EQCSxMGBDrK7pprTSu4_vHFGmv9RWxZmFRH0D6JBeci9T6aK"
+  },
+  "channels_groups": {
+    "telegram_channel": "https://t.me/deebnetwork1",
+    "telegram_group": "https://t.me/+VifpXn6GNNU5NThk",
+    "telegram_bot": "https://t.me/DEEB_Desert_Bot",
+    "instagram": "https://instagram.com/deebnetwork",
+    "youtube": "https://youtube.com/@deebnetwork?si=9o9ahaayAlMiRE7N",
+    "x_twitter": "https://x.com/deebNetwork",
+    "website": "https://t.me/deebnetwork1"
+  }
+}
