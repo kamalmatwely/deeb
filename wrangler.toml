@@ -1,0 +1,8 @@
+# DEEB - Cloudflare Workers config
+# Worker name is set on deploy with --name, do NOT hardcode old name here
+name = "deeb"
+compatibility_date = "2024-01-01"
+
+[assets]
+directory = "./"
+not_found_handling = "single-page-application"
