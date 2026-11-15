@@ -2,7 +2,7 @@
   "name": "deeb",
   "version": "1.0.0",
   "private": true,
-  "description": "DEEB - Desert Wolf Telegram Mini App",
+  "type": "module",
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy"

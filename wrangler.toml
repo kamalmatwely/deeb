@@ -1,8 +1,21 @@
-# DEEB - Cloudflare Workers config
-# Worker name is set on deploy with --name, do NOT hardcode old name here
 name = "deeb"
+main = "backend/src/index.js"
 compatibility_date = "2024-01-01"
+compatibility_flags = ["nodejs_compat"]
 
 [assets]
-directory = "./"
+directory = "./frontend"
+binding = "ASSETS"
 not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "deeb-db"
+database_id = "ضع-ID-هنا-بعد-wrangler-d1-create"
+
+[vars]
+OWNER_ID = "6917028432"
+BOT_USERNAME = "DEEB_Desert_Bot"
+TOKEN_CONTRACT = "EQCk7OdnTdNQR1v5gn2yulD6ieTBte00SyJ9hqilOiRKDwXE"
+POOL_WALLET = "EQCSxMGBDrK7pprTSu4_vHFGmv9RWxZmFRH0D6JBeci9T6aK"
+OWNER_WALLET = "UQBfJAOxieOPI1tlo784ywL9jlo1Ez2enZtfP5MuJ7RW-r4D"
