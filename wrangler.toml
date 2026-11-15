@@ -11,7 +11,7 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "deeb-db"
-database_id = "ضع-ID-هنا-بعد-wrangler-d1-create"
+database_id = "f7ec4d25-110c-4607-975f-95cc88c737c3"
 
 [vars]
 OWNER_ID = "6917028432"
