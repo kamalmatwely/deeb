@@ -1,0 +1,31 @@
+{
+  "contract": "EQCk7OdnTdNQR1v5gn2yulD6ieTBte00SyJ9hqilOiRKDwXE",
+  "poolWallet": "EQCSxMGBDrK7pprTSu4_vHFGmv9RWxZmFRH0D6JBeci9T6aK",
+  "ownerWallet": "UQBfJAOxieOPI1tlo784ywL9jlo1Ez2enZtfP5MuJ7RW-r4D",
+  "ownerTelegramId": "6917028432",
+  "botUsername": "DEEB_Desert_Bot",
+  "channel": "https://t.me/deebnetwork1",
+  "group": "https://t.me/+VifpXn6GNNU5NThk",
+  "youtube": "https://youtube.com/@deebnetwork?si=9o9ahaayAlMiRE7N",
+  "twitter": "https://x.com/deebNetwork",
+  "instagram": "https://instagram.com/deebnetwork",
+  "token": {
+    "name": "DEEB",
+    "symbol": "DEEB",
+    "decimals": 9,
+    "totalSupply": 40000000,
+    "priceUsd": 7.5e-06,
+    "priceCent": 0.00075
+  },
+  "economy": {
+    "tapReward": 0.0001,
+    "taskReward": 1,
+    "taskRewardSpecial": 5,
+    "referralPercent": 0.05,
+    "minWithdraw": 1000,
+    "withdrawFee": 7,
+    "maxOfflineHours": 4,
+    "offlineRate": 0.0001,
+    "binocularReward": 10
+  }
+}
