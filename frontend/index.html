@@ -1367,8 +1367,32 @@ if(energy<=0 && energyRefillAt && Date.now()>=energyRefillAt){ refillEnergy(); }
 
 </script>
 <div style="display:none"><span id="expCount">0</span><span id="bal3">0</span><span id="remain">0</span><span id="gain">0</span><div id="remainBar"></div><span id="leftUp">0</span></div>
-<script>
+ <script>
 (function(){
+  function showWallet(addr){
+    // غير كل اللي فيه Connect Wallet لعنوان المحفظة
+    var all = document.querySelectorAll('button, div, span, a');
+    for(var i=0;i<all.length;i++){
+      var t = (all[i].textContent||'').trim();
+      if(t === 'Connect Wallet' || t.indexOf('Connect Wallet')===0){
+        all[i].textContent = '✔ ' + addr.slice(0,4) + '...' + addr.slice(-4);
+      }
+    }
+    // اعمل لينك المحفظة تحت الزرار
+    var old = document.getElementById('walletLinkBox');
+    if(old) old.remove();
+    var box = document.createElement('div');
+    box.id = 'walletLinkBox';
+    box.style.cssText = 'text-align:center;font-size:11px;color:#7ecbff;margin-top:4px;word-break:break-all;padding:0 12px;';
+    box.innerHTML = 'Wallet: <a href="https://tonviewer.com/' + addr + '" target="_blank" style="color:#7ecbff;text-decoration:underline;">' + addr + '</a>';
+    // حطه بعد زرار Connect Wallet
+    var btn = null;
+    for(var j=0;j<all.length;j++){
+      if((all[j].textContent||'').indexOf('✔')===0){ btn = all[j]; break; }
+    }
+    if(btn && btn.parentNode) btn.parentNode.insertBefore(box, btn.nextSibling);
+    try{ localStorage.setItem('deeb_wallet', addr); }catch(e){}
+  }
   function initTon(){
     if(!window.TON_CONNECT_UI){ setTimeout(initTon, 500); return; }
     try{
@@ -1394,16 +1418,23 @@ if(energy<=0 && energyRefillAt && Date.now()>=energyRefillAt){ refillEnergy(); }
         };
       }
       window.tonUI.onStatusChange(function(w){
-        if(w && w.account){
-          var a = w.account.address;
-          if(target) target.textContent = '✔ ' + a.slice(0,4) + '...' + a.slice(-4);
+        if(w && w.account && w.account.address){
+          showWallet(w.account.address);
         }
       });
+      // لو مربوطة أصلاً من قبل، اظهرها على طول من غير ما تدوس
+      setTimeout(function(){
+        try{
+          var saved = localStorage.getItem('deeb_wallet');
+          if(saved) showWallet(saved);
+          if(window.tonUI.account && window.tonUI.account.address) showWallet(window.tonUI.account.address);
+        }catch(e){}
+      }, 1000);
     }catch(e){ console.log('TonConnect error', e); }
   }
   if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initTon);
   else initTon();
 })();
-       </script>
+     </script>
 </body>
 </html>
