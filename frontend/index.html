@@ -1367,37 +1367,43 @@ if(energy<=0 && energyRefillAt && Date.now()>=energyRefillAt){ refillEnergy(); }
 
 </script>
 <div style="display:none"><span id="expCount">0</span><span id="bal3">0</span><span id="remain">0</span><span id="gain">0</span><div id="remainBar"></div><span id="leftUp">0</span></div>
- <script>
+<script>
 (function(){
-  try{
-    var tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
-      manifestUrl: 'https://deeb.kamalmatwely.workers.dev/tonconnect-manifest.json',
-    });
-    var btns = document.querySelectorAll('*');
-    for(var i=0;i<btns.length;i++){
-      var el = btns[i];
-      if(el.textContent && el.textContent.indexOf('Connect Wallet') !== -1){
-        el.style.cursor = 'pointer';
-        el.addEventListener('click', function(e){
-          e.preventDefault();
-          e.stopPropagation();
-          tonConnectUI.openModal();
-        });
+  function initTon(){
+    if(!window.TON_CONNECT_UI){ setTimeout(initTon, 500); return; }
+    try{
+      window.tonUI = new TON_CONNECT_UI.TonConnectUI({
+        manifestUrl: 'https://deeb.kamalmatwely.workers.dev/tonconnect-manifest.json'
+      });
+      var all = document.querySelectorAll('button, div, span, a');
+      var target = null;
+      for(var i=0;i<all.length;i++){
+        var t = (all[i].textContent||'').trim();
+        if(t === 'Connect Wallet' && all[i].children.length===0){ target = all[i]; break; }
       }
-    }
-    tonConnectUI.onStatusChange(function(wallet){
-      if(wallet && wallet.account){
-        var addr = wallet.account.address;
-        var shortAddr = addr.slice(0,4) + '...' + addr.slice(-4);
-        for(var i=0;i<btns.length;i++){
-          if(btns[i].textContent && btns[i].textContent.indexOf('Connect Wallet') !== -1){
-            btns[i].textContent = '✔ ' + shortAddr;
-          }
+      if(!target){
+        for(var i=0;i<all.length;i++){
+          if((all[i].textContent||'').indexOf('Connect Wallet')!==-1){ target = all[i]; break; }
         }
       }
-    });
-  }catch(e){ console.log('TonConnect error', e); }
+      if(target){
+        target.style.cursor='pointer';
+        target.onclick = function(e){
+          e.preventDefault(); e.stopPropagation();
+          window.tonUI.openModal();
+        };
+      }
+      window.tonUI.onStatusChange(function(w){
+        if(w && w.account){
+          var a = w.account.address;
+          if(target) target.textContent = '✔ ' + a.slice(0,4) + '...' + a.slice(-4);
+        }
+      });
+    }catch(e){ console.log('TonConnect error', e); }
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', initTon);
+  else initTon();
 })();
- </script>
+       </script>
 </body>
 </html>
