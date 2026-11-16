@@ -1372,7 +1372,6 @@ if(energy<=0 && energyRefillAt && Date.now()>=energyRefillAt){ refillEnergy(); }
   try{
     var tonConnectUI = new TON_CONNECT_UI.TonConnectUI({
       manifestUrl: 'https://deeb.kamalmatwely.workers.dev/tonconnect-manifest.json',
-      buttonRootId: 'ton-connect-button'
     });
     var btns = document.querySelectorAll('*');
     for(var i=0;i<btns.length;i++){
