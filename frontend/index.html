@@ -1447,5 +1447,14 @@ function showWallet(addr){
   else initTon();
 })();
      </script>
+ <style>
+  /* قفل الفراغ اللي تحت الديب */
+  html, body { height: 100%; margin: 0; padding-bottom: 0 !important; }
+  body { display: flex; flex-direction: column; }
+  /* خلي خلفية الديب تملا الفراغ */
+  body > div:last-of-type { flex: 1; }
+  /* لو فيه مسافة فاضية متعمدة، الغيها */
+  .spacer, .empty-space, .gap { display: none !important; height: 0 !important; margin: 0 !important; padding: 0 !important; }
+ </style>
 </body>
 </html>
