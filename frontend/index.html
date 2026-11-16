@@ -1402,17 +1402,6 @@ function showWallet(addr){
       all[i].textContent = '✔ ' + addr.slice(0,4) + '...' + addr.slice(-4);
     }
   }
-  var old = document.getElementById('walletLinkBox');
-  if(old) old.remove();
-  var box = document.createElement('div');
-  box.id = 'walletLinkBox';
-  box.style.cssText = 'text-align:center;font-size:11px;color:#7ecbff;margin-top:4px;word-break:break-all;padding:0 12px;';
-  box.innerHTML = 'Wallet: <a href="https://tonviewer.com/' + addr + '" target="_blank" style="color:#7ecbff;text-decoration:underline;">' + addr + '</a>';
-  var btn = null;
-  for(var j=0;j<all.length;j++){
-    if((all[j].textContent||'').indexOf('✔')===0){ btn = all[j]; break; }
-  }
-  if(btn && btn.parentNode) btn.parentNode.insertBefore(box, btn.nextSibling);
   try{ localStorage.setItem('deeb_wallet', addr); }catch(e){}
 }
   function initTon(){
