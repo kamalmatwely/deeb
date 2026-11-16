@@ -58,7 +58,7 @@ return { ok: false, reason: 'react_first' };
     let r = await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/getChat?chat_id=${userId}`);
     let j = await r.json();
     let name = (j.result?.first_name || '') + ' ' + (j.result?.last_name || '');
-    if(name.includes('🐺deeb') || name.includes('🐺 deeb') || name.includes('deeb')){
+    if(name.includes('🐺deeb') || name.includes('🐺 deeb')){
       return { ok: true };
     }
     return { ok: false, reason: 'no_bio' };
