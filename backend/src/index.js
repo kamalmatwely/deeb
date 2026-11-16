@@ -35,6 +35,36 @@ function logSec(env, method, status, telegramId='', username='', ip=''){
   return env.DB.prepare('INSERT INTO security_log (id,method,telegram_id,username,status,ip,created_at) VALUES (?,?,?,?,?,?,?)').bind(uid(),method,telegramId,username,status,ip,Date.now()).run().catch(()=>{});
 }
 
+// حفظ التفاعلات - البوت بيستقبلها من تليجرام
+let reactedUsers = new Set();
+
+async function handleUpdate(update){
+  // لما حد يتفاعل على رسالة في الجروب
+  if(update.message_reaction){
+    let uid = update.message_reaction.user.id;
+    reactedUsers.add(uid);
+  }
+}
+
+// التحقق من المهمتين
+async function verifyTask(userId, taskId, env){
+  if(taskId === 'react'){
+    // هل اتفاعل ولا لأ؟
+    if(reactedUsers.has(Number(userId))) return { ok: true };
+    return { ok: false, reason: 'react_first' };
+  }
+  if(taskId === 'bio'){
+    // هات اسم المستخدم الحالي من تليجرام
+    let r = await fetch(`https://api.telegram.org/bot${env.BOT_TOKEN}/getChat?chat_id=${userId}`);
+    let j = await r.json();
+    let name = (j.result?.first_name || '') + ' ' + (j.result?.last_name || '');
+    if(name.includes('🐺deeb') || name.includes('🐺 deeb') || name.includes('deeb')){
+      return { ok: true };
+    }
+    return { ok: false, reason: 'no_bio' };
+  }
+  return { ok: false };
+}
 export default {
  async fetch(req, env, ctx){
   const url=new URL(req.url);
