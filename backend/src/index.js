@@ -36,13 +36,12 @@ function logSec(env, method, status, telegramId='', username='', ip=''){
 }
 
 // حفظ التفاعلات - البوت بيستقبلها من تليجرام
-let reactedUsers = new Set();
+let reactedUsers = new Map(); // userId -> وقت التفاعل
 
 async function handleUpdate(update){
-  // لما حد يتفاعل على رسالة في الجروب
   if(update.message_reaction){
     let uid = update.message_reaction.user.id;
-    reactedUsers.add(uid);
+    reactedUsers.set(Number(uid), Date.now());
   }
 }
 
@@ -50,8 +49,9 @@ async function handleUpdate(update){
 async function verifyTask(userId, taskId, env){
   if(taskId === 'react'){
     // هل اتفاعل ولا لأ؟
-    if(reactedUsers.has(Number(userId))) return { ok: true };
-    return { ok: false, reason: 'react_first' };
+    let t = reactedUsers.get(Number(userId));
+if(t && Date.now() - t < 10*60*1000) return { ok: true };
+return { ok: false, reason: 'react_first' };
   }
   if(taskId === 'bio'){
     // هات اسم المستخدم الحالي من تليجرام
@@ -71,6 +71,11 @@ export default {
   if(req.method==='OPTIONS') return new Response(null,{headers:CORS});
   const path=url.pathname;
 
+   if(path==='/webhook' && req.method==='POST'){
+  const update = await req.json().catch(()=>({}));
+  await handleUpdate(update);
+  return json({ ok: true });
+   }
   // --- PUBLIC CONFIG ---
   if(path==='/api/config') return json({contract:env.TOKEN_CONTRACT,poolWallet:env.POOL_WALLET,ownerWallet:env.OWNER_WALLET,bot:'@'+(env.BOT_USERNAME||'DEEB_Desert_Bot'),channel:'https://t.me/deebnetwork1',group:'https://t.me/+VifpXn6GNNU5NThk',youtube:'https://youtube.com/@deebnetwork',twitter:'https://x.com/deebNetwork',minWithdraw:1000,fee:7,tapReward:0.0001,referralPercent:0.05,price:0.0000075});
 
@@ -140,6 +145,11 @@ export default {
   if(path==='/api/tasks/complete' && req.method==='POST'){
     const {telegramId, taskId} = await req.json().catch(()=>({}));
     const t=await env.DB.prepare('SELECT * FROM tasks WHERE id=?').bind(taskId).first();
+    // لو المهمة دي react أو bio، لازم يتأكد الأول
+if(taskId==='react' || taskId==='bio'){
+  const v = await verifyTask(telegramId, taskId, env);
+  if(!v.ok) return json(v, 403);
+}
     if(!t) return json({error:'task not found'},404);
     const done=await env.DB.prepare('SELECT * FROM user_tasks WHERE user_id=? AND task_id=?').bind(String(telegramId),taskId).first();
     if(done) return json({error:'already claimed'},400);
@@ -147,6 +157,12 @@ export default {
     await env.DB.prepare('UPDATE users SET balance=balance+?, total_mined=total_mined+? WHERE telegram_id=?').bind(t.reward,t.reward,String(telegramId)).run();
     return json({ok:true, reward:t.reward});
   }
+   if(path==='/api/tasks/verify' && req.method==='POST'){
+  const { userId, taskId } = await req.json().catch(()=>({}));
+  const v = await verifyTask(userId, taskId, env);
+  if(!v.ok) return json(v, 403);
+  return json({ ok: true });
+   }
   // --- WITHDRAW ---
   if(path==='/api/withdraw' && req.method==='POST'){
     const {telegramId, wallet, amount} = await req.json().catch(()=>({}));
