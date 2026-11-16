@@ -1456,5 +1456,36 @@ function showWallet(addr){
   /* لو فيه مسافة فاضية متعمدة، الغيها */
   .spacer, .empty-space, .gap { display: none !important; height: 0 !important; margin: 0 !important; padding: 0 !important; }
  </style>
+ <script>
+(function(){
+  function addChannelBtn(){
+    var tasks = document.querySelectorAll('.atf-task');
+    for(var i=0;i<tasks.length;i++){
+      var t = tasks[i].textContent || '';
+      // دور على مهمة النار بس
+      if(t.indexOf('🔥')!==-1 && !tasks[i].querySelector('.deeb-channel-btn')){
+        var a = document.createElement('a');
+        a.href = 'https://t.me/deebnetwork1';
+        a.className = 'deeb-channel-btn';
+        a.textContent = '🔥 افتح القناة واتفاعل دلوقتي';
+        a.style.cssText = 'display:block;text-align:center;background:#FFB300;color:#000;padding:10px;border-radius:10px;font-weight:900;margin-top:6px;text-decoration:none;';
+        a.onclick = function(e){
+          e.preventDefault();
+          if(window.Telegram && Telegram.WebApp) Telegram.WebApp.openTelegramLink('https://t.me/deebnetwork1');
+          else window.open('https://t.me/deebnetwork1','_blank');
+        };
+        tasks[i].appendChild(a);
+      }
+    }
+  }
+  // جرب كل ثانية لحد ما المهام تتحمل من السيرفر
+  var n = 0;
+  var timer = setInterval(function(){
+    addChannelBtn();
+    n++;
+    if(n > 20) clearInterval(timer);
+  }, 1000);
+})();
+       </script>
 </body>
 </html>
