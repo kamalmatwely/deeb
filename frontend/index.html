@@ -1369,30 +1369,52 @@ if(energy<=0 && energyRefillAt && Date.now()>=energyRefillAt){ refillEnergy(); }
 <div style="display:none"><span id="expCount">0</span><span id="bal3">0</span><span id="remain">0</span><span id="gain">0</span><div id="remainBar"></div><span id="leftUp">0</span></div>
  <script>
 (function(){
-  function showWallet(addr){
-    // غير كل اللي فيه Connect Wallet لعنوان المحفظة
-    var all = document.querySelectorAll('button, div, span, a');
-    for(var i=0;i<all.length;i++){
-      var t = (all[i].textContent||'').trim();
-      if(t === 'Connect Wallet' || t.indexOf('Connect Wallet')===0){
-        all[i].textContent = '✔ ' + addr.slice(0,4) + '...' + addr.slice(-4);
+function rawToUQ(raw){
+  try{
+    if(raw.indexOf('UQ')===0 || raw.indexOf('EQ')===0) return raw;
+    var parts = raw.split(':');
+    var wc = parseInt(parts[0],10);
+    var hex = parts[1];
+    var hash = [];
+    for(var i=0;i<hex.length;i+=2) hash.push(parseInt(hex.substr(i,2),16));
+    var bytes = [0x11, wc & 0xFF].concat(hash);
+    var crc = 0;
+    for(var j=0;j<bytes.length;j++){
+      crc ^= (bytes[j] << 8);
+      for(var k=0;k<8;k++){
+        if(crc & 0x8000) crc = ((crc << 1) ^ 0x1021) & 0xFFFF;
+        else crc = (crc << 1) & 0xFFFF;
       }
     }
-    // اعمل لينك المحفظة تحت الزرار
-    var old = document.getElementById('walletLinkBox');
-    if(old) old.remove();
-    var box = document.createElement('div');
-    box.id = 'walletLinkBox';
-    box.style.cssText = 'text-align:center;font-size:11px;color:#7ecbff;margin-top:4px;word-break:break-all;padding:0 12px;';
-    box.innerHTML = 'Wallet: <a href="https://tonviewer.com/' + addr + '" target="_blank" style="color:#7ecbff;text-decoration:underline;">' + addr + '</a>';
-    // حطه بعد زرار Connect Wallet
-    var btn = null;
-    for(var j=0;j<all.length;j++){
-      if((all[j].textContent||'').indexOf('✔')===0){ btn = all[j]; break; }
+    bytes.push((crc >> 8) & 0xFF, crc & 0xFF);
+    var str = '';
+    for(var m=0;m<bytes.length;m++) str += String.fromCharCode(bytes[m]);
+    var b64 = btoa(str).replace(/\+/g,'-').replace(/\//g,'_');
+    return 'UQ' + b64.slice(2);
+  }catch(e){ return raw; }
+}
+function showWallet(addr){
+  addr = rawToUQ(addr);
+  var all = document.querySelectorAll('button, div, span, a');
+  for(var i=0;i<all.length;i++){
+    var t = (all[i].textContent||'').trim();
+    if(t === 'Connect Wallet' || t.indexOf('Connect Wallet')===0){
+      all[i].textContent = '✔ ' + addr.slice(0,4) + '...' + addr.slice(-4);
     }
-    if(btn && btn.parentNode) btn.parentNode.insertBefore(box, btn.nextSibling);
-    try{ localStorage.setItem('deeb_wallet', addr); }catch(e){}
   }
+  var old = document.getElementById('walletLinkBox');
+  if(old) old.remove();
+  var box = document.createElement('div');
+  box.id = 'walletLinkBox';
+  box.style.cssText = 'text-align:center;font-size:11px;color:#7ecbff;margin-top:4px;word-break:break-all;padding:0 12px;';
+  box.innerHTML = 'Wallet: <a href="https://tonviewer.com/' + addr + '" target="_blank" style="color:#7ecbff;text-decoration:underline;">' + addr + '</a>';
+  var btn = null;
+  for(var j=0;j<all.length;j++){
+    if((all[j].textContent||'').indexOf('✔')===0){ btn = all[j]; break; }
+  }
+  if(btn && btn.parentNode) btn.parentNode.insertBefore(box, btn.nextSibling);
+  try{ localStorage.setItem('deeb_wallet', addr); }catch(e){}
+}
   function initTon(){
     if(!window.TON_CONNECT_UI){ setTimeout(initTon, 500); return; }
     try{
