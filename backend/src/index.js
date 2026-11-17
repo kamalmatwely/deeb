@@ -34,6 +34,12 @@ async function requireAdmin(env, req){
 function logSec(env, method, status, telegramId='', username='', ip=''){
   return env.DB.prepare('INSERT INTO security_log (id,method,telegram_id,username,status,ip,created_at) VALUES (?,?,?,?,?,?,?)').bind(uid(),method,telegramId,username,status,ip,Date.now()).run().catch(()=>{});
 }
+async function logActivity(env, telegramId, username, action, detail){
+  try{
+    await env.DB.prepare('CREATE TABLE IF NOT EXISTS activity_log (id TEXT PRIMARY KEY, telegram_id TEXT, username TEXT, action TEXT, detail TEXT, created_at INTEGER)').run();
+    await env.DB.prepare('INSERT INTO activity_log VALUES (?,?,?,?,?,?)').bind(uid(),String(telegramId||''),username||'',action,detail||'',Date.now()).run();
+  }catch(e){}
+}
 
 // حفظ التفاعلات - البوت بيستقبلها من تليجرام
 let reactedUsers = new Map(); // userId -> وقت التفاعل
@@ -122,7 +128,7 @@ export default {
     const bonus=elapsed*0.0001;
     if(bonus>0) await env.DB.prepare('UPDATE users SET balance=balance+?, total_mined=total_mined+?, last_seen=? WHERE telegram_id=?').bind(bonus,bonus,Date.now(),String(telegramId)).run();
     else await env.DB.prepare('UPDATE users SET last_seen=? WHERE telegram_id=?').bind(Date.now(),String(telegramId)).run();
-    u=await env.DB.prepare('SELECT * FROM users WHERE telegram_id=?').bind(String(telegramId)).first();
+    u=await env.DB.prepare('SELECT * FROM users WHERE telegram_id=?').bind(String(telegramId)).first();    await logActivity(env, telegramId, username, 'open', 'دخل البوت / فتح التطبيق');
     return json({user:u, offlineBonus:bonus});
   }
   // --- TAP ---
@@ -136,6 +142,7 @@ export default {
       await env.DB.prepare('UPDATE users SET balance=balance+0.000005 WHERE telegram_id=?').bind(u.referrer_id).run();
       await env.DB.prepare('UPDATE referrals SET earned=earned+0.000005 WHERE invited_id=?').bind(String(telegramId)).run();
     }
+        await logActivity(env, telegramId, '', 'tap', 'داس Tap +0.0001');
     return json({ok:true, reward:0.0001});
   }
   // --- TASKS ---
@@ -155,6 +162,7 @@ if(taskId==='react' || taskId==='bio'){
     if(done) return json({error:'already claimed'},400);
     await env.DB.prepare('INSERT INTO user_tasks VALUES (?,?,?)').bind(String(telegramId),taskId,Date.now()).run();
     await env.DB.prepare('UPDATE users SET balance=balance+?, total_mined=total_mined+? WHERE telegram_id=?').bind(t.reward,t.reward,String(telegramId)).run();
+        await logActivity(env, telegramId, '', 'task', 'خلص مهمة ' + taskId);
     return json({ok:true, reward:t.reward});
   }
    if(path==='/api/tasks/verify' && req.method==='POST'){
@@ -176,7 +184,18 @@ if(taskId==='react' || taskId==='bio'){
     const id=uid();
     await env.DB.prepare('INSERT INTO withdrawals (id,user_id,wallet,amount,fee,receive,status,created_at) VALUES (?,?,?,?,?,?,?,?)').bind(id,String(telegramId),wallet,amount,fee,receive,'pending',Date.now()).run();
     await sendTelegram(env, env.OWNER_ID, `🧾 <b>New Withdrawal</b>\nUser: ${u.username||''} (${telegramId})\nWallet: <code>${wallet}</code>\nAmount: ${amount} DEEB\nFee: ${fee}\nReceive: ${receive}`);
+        await logActivity(env, telegramId, '', 'withdraw', 'طلب سحب ' + amount + ' DEEB');
     return json({ok:true, id, receive});
+
+      if(path==='/api/ads/view' && req.method==='POST'){
+    const {telegramId, adType} = await req.json().catch(()=>({}));
+    if(!telegramId) return json({error:'telegramId'},400);
+    await env.DB.prepare('CREATE TABLE IF NOT EXISTS ads_views (id TEXT PRIMARY KEY, telegram_id TEXT, ad_type TEXT, reward REAL, created_at INTEGER)').run().catch(()=>{});
+    await env.DB.prepare('INSERT INTO ads_views VALUES (?,?,?,?,?)').bind(uid(),String(telegramId),adType||'binocular',1,Date.now()).run();
+    await env.DB.prepare('UPDATE users SET balance=balance+1, total_mined=total_mined+1 WHERE telegram_id=?').bind(String(telegramId)).run();
+    await logActivity(env, telegramId, '', 'ad', 'شاف إعلان ' + (adType||'binocular'));
+    return json({ok:true, reward:1});
+                          }
   }
   if(path==='/api/withdrawals'){
     const telegramId=url.searchParams.get('telegramId');
@@ -204,6 +223,15 @@ if(taskId==='react' || taskId==='bio'){
     if(path==='/api/admin/referrals'){
   const r=await env.DB.prepare('SELECT inviter_id, COUNT(*) AS total, SUM(earned) AS total_earned FROM referrals GROUP BY inviter_id').all();
   return json({ referrals: r.results });
+    }
+        if(path==='/api/admin/activity'){
+      const r=await env.DB.prepare('SELECT * FROM activity_log ORDER BY created_at DESC LIMIT 100').all().catch(()=>({results:[]})); return json({activity:r.results||[]});
+        }
+        if(path==='/api/admin/tasks'){
+      const r=await env.DB.prepare('SELECT * FROM user_tasks ORDER BY completed_at DESC LIMIT 200').all().catch(()=>({results:[]})); return json({tasks:r.results||[]});
+    }
+    if(path==='/api/admin/ads'){
+      const r=await env.DB.prepare('SELECT * FROM ads_views ORDER BY created_at DESC LIMIT 200').all().catch(()=>({results:[]})); return json({ads:r.results||[]});
     }
     if(path==='/api/admin/withdrawals/approve' && req.method==='POST'){
       const {id}=await req.json().catch(()=>({})); await env.DB.prepare("UPDATE withdrawals SET status='completed', decided_at=? WHERE id=?").bind(Date.now(),id).run(); return json({ok:true});
