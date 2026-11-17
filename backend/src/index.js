@@ -201,6 +201,10 @@ if(taskId==='react' || taskId==='bio'){
     if(path==='/api/admin/security-log'){
       const r=await env.DB.prepare('SELECT * FROM security_log ORDER BY created_at DESC LIMIT 50').all(); return json({log:r.results});
     }
+    if(path==='/api/admin/referrals'){
+  const r=await env.DB.prepare('SELECT inviter_id, COUNT(*) AS total, SUM(earned) AS total_earned FROM referrals GROUP BY inviter_id').all();
+  return json({ referrals: r.results });
+    }
     if(path==='/api/admin/withdrawals/approve' && req.method==='POST'){
       const {id}=await req.json().catch(()=>({})); await env.DB.prepare("UPDATE withdrawals SET status='completed', decided_at=? WHERE id=?").bind(Date.now(),id).run(); return json({ok:true});
     }
